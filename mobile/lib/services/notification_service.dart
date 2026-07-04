@@ -17,7 +17,7 @@ class NotificationService {
   static const String _channelId = 'valryze_notifications';
   static const String _channelName = 'Valryze Notifications';
   static const String _channelDescription = 'Notifications from Valryze HR System';
-  static const String _customSoundFileName = 'notif_sound.mp3';
+  static const String _customSoundFileName = 'notif.mp3';
 
   /// Initialize Firebase and FCM configurations
   static Future<void> initialize() async {
