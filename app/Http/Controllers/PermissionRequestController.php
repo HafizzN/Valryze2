@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\PermissionRequest;
 use App\Models\User;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Jobs\SendEmailJob;
+use App\Helpers\FcmHelper;
 
 class PermissionRequestController extends Controller
 {
@@ -77,6 +79,22 @@ class PermissionRequestController extends Controller
             'approved_at' => now(),
         ]);
 
+        // Create notification
+        $notification = Notification::create([
+            'user_id' => $permission->user_id,
+            'type' => 'permission',
+            'title' => 'Pengajuan Izin Disetujui!',
+            'message' => "Selamat! Pengajuan izin Anda untuk tanggal {$permission->date} telah disetujui.",
+        ]);
+
+        // Send FCM notification
+        FcmHelper::sendToUser(
+            $permission->user,
+            'Pengajuan Izin Disetujui!',
+            "Selamat! Pengajuan izin Anda untuk tanggal {$permission->date} telah disetujui.",
+            ['type' => 'permission', 'id' => $permission->id]
+        );
+
         // Auto-generate attendance records for all approved permission dates
         $start = \Carbon\Carbon::parse($permission->date);
         $end = $permission->end_date ? \Carbon\Carbon::parse($permission->end_date) : $start;
@@ -113,6 +131,22 @@ class PermissionRequestController extends Controller
     {
         $request->validate(['rejection_reason' => 'required|string']);
         $permission->update(['status' => 'rejected', 'rejection_reason' => $request->rejection_reason]);
+
+        // Create notification
+        $notification = Notification::create([
+            'user_id' => $permission->user_id,
+            'type' => 'permission',
+            'title' => 'Pengajuan Izin Ditolak',
+            'message' => "Pengajuan izin Anda untuk tanggal {$permission->date} telah ditolak. Alasan: {$request->rejection_reason}",
+        ]);
+
+        // Send FCM notification
+        FcmHelper::sendToUser(
+            $permission->user,
+            'Pengajuan Izin Ditolak',
+            "Pengajuan izin Anda untuk tanggal {$permission->date} telah ditolak.",
+            ['type' => 'permission', 'id' => $permission->id]
+        );
 
         try {
             SendEmailJob::dispatch(

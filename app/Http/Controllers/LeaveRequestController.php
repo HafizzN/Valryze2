@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\LeaveRequest;
 use App\Models\User;
+use App\Models\Notification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\SendEmailJob;
 use App\Models\ActivityLog;
+use App\Helpers\FcmHelper;
 
 class LeaveRequestController extends Controller
 {
@@ -121,6 +123,22 @@ class LeaveRequestController extends Controller
                 'approved_by' => $user->name,
             ]);
 
+            // Create notification
+            $notification = Notification::create([
+                'user_id' => $leave->user_id,
+                'type' => 'leave',
+                'title' => 'Pengajuan Cuti Disetujui Manager',
+                'message' => "Pengajuan cuti Anda ({$leave->start_date} s/d {$leave->end_date}) telah disetujui oleh Manager dan sedang menunggu HRD.",
+            ]);
+
+            // Send FCM notification
+            FcmHelper::sendToUser(
+                $leave->user,
+                'Pengajuan Cuti Disetujui Manager',
+                "Pengajuan cuti Anda ({$leave->start_date} s/d {$leave->end_date}) telah disetujui oleh Manager dan sedang menunggu HRD.",
+                ['type' => 'leave', 'id' => $leave->id]
+            );
+
             try {
                 SendEmailJob::dispatch(
                     $leave->user->email,
@@ -153,6 +171,22 @@ class LeaveRequestController extends Controller
                 'status' => 'approved',
                 'approved_by' => $user->name,
             ]);
+
+            // Create notification
+            $notification = Notification::create([
+                'user_id' => $leave->user_id,
+                'type' => 'leave',
+                'title' => 'Pengajuan Cuti Disetujui!',
+                'message' => "Selamat! Pengajuan cuti Anda ({$leave->start_date} s/d {$leave->end_date}) telah disetujui sepenuhnya.",
+            ]);
+
+            // Send FCM notification
+            FcmHelper::sendToUser(
+                $leave->user,
+                'Pengajuan Cuti Disetujui!',
+                "Selamat! Pengajuan cuti Anda ({$leave->start_date} s/d {$leave->end_date}) telah disetujui sepenuhnya.",
+                ['type' => 'leave', 'id' => $leave->id]
+            );
 
             // Auto-generate attendance records for all approved leave dates
             $start = Carbon::parse($leave->start_date);
@@ -208,6 +242,22 @@ class LeaveRequestController extends Controller
             'rejection_reason' => $request->rejection_reason,
             'rejected_by' => $user->name,
         ]);
+
+        // Create notification
+        $notification = Notification::create([
+            'user_id' => $leave->user_id,
+            'type' => 'leave',
+            'title' => 'Pengajuan Cuti Ditolak',
+            'message' => "Pengajuan cuti Anda ({$leave->start_date} s/d {$leave->end_date}) telah ditolak. Alasan: {$request->rejection_reason}",
+        ]);
+
+        // Send FCM notification
+        FcmHelper::sendToUser(
+            $leave->user,
+            'Pengajuan Cuti Ditolak',
+            "Pengajuan cuti Anda ({$leave->start_date} s/d {$leave->end_date}) telah ditolak.",
+            ['type' => 'leave', 'id' => $leave->id]
+        );
 
         try {
             SendEmailJob::dispatch(

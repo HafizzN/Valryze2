@@ -16,7 +16,7 @@ Schedule::command('leave:accrue')->monthlyOn(1, '00:00');
 Schedule::command('birthday:notify')->dailyAt('08:00')->timezone('Asia/Jakarta');
 
 // Schedule attendance reminders to check every 15 minutes
-Schedule::command('attendance:remind')->everyFifteenMinutes();
+Schedule::command('app:send-attendance-reminder')->everyFifteenMinutes()->timezone('Asia/Jakarta');
 
 // Schedule queue heartbeat job to run every minute
 Schedule::job(new \App\Jobs\QueueHeartbeatJob)->everyMinute();

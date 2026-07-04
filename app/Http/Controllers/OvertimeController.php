@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\OvertimeRequest;
 use App\Models\User;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Jobs\SendEmailJob;
+use App\Helpers\FcmHelper;
 
 class OvertimeController extends Controller
 {
@@ -71,6 +73,22 @@ class OvertimeController extends Controller
             'manager_approved_at' => now(),
         ]);
 
+        // Create notification
+        $notification = Notification::create([
+            'user_id' => $overtime->user_id,
+            'type' => 'overtime',
+            'title' => 'Pengajuan Lembur Disetujui Manager',
+            'message' => "Pengajuan lembur Anda untuk tanggal {$overtime->date} ({$overtime->total_hours} jam) telah disetujui oleh Manager dan sedang menunggu HRD.",
+        ]);
+
+        // Send FCM notification
+        FcmHelper::sendToUser(
+            $overtime->user,
+            'Pengajuan Lembur Disetujui Manager',
+            "Pengajuan lembur Anda untuk tanggal {$overtime->date} ({$overtime->total_hours} jam) telah disetujui oleh Manager dan sedang menunggu HRD.",
+            ['type' => 'overtime', 'id' => $overtime->id]
+        );
+
         try {
             SendEmailJob::dispatch(
                 $overtime->user->email,
@@ -92,6 +110,22 @@ class OvertimeController extends Controller
             'hrd_approved_at' => now(),
         ]);
 
+        // Create notification
+        $notification = Notification::create([
+            'user_id' => $overtime->user_id,
+            'type' => 'overtime',
+            'title' => 'Pengajuan Lembur Disetujui!',
+            'message' => "Selamat! Pengajuan lembur Anda untuk tanggal {$overtime->date} ({$overtime->total_hours} jam) telah disetujui sepenuhnya.",
+        ]);
+
+        // Send FCM notification
+        FcmHelper::sendToUser(
+            $overtime->user,
+            'Pengajuan Lembur Disetujui!',
+            "Selamat! Pengajuan lembur Anda untuk tanggal {$overtime->date} ({$overtime->total_hours} jam) telah disetujui sepenuhnya.",
+            ['type' => 'overtime', 'id' => $overtime->id]
+        );
+
         try {
             SendEmailJob::dispatch(
                 $overtime->user->email,
@@ -109,6 +143,22 @@ class OvertimeController extends Controller
     {
         $request->validate(['rejection_reason' => 'required|string']);
         $overtime->update(['status' => 'rejected', 'rejection_reason' => $request->rejection_reason]);
+
+        // Create notification
+        $notification = Notification::create([
+            'user_id' => $overtime->user_id,
+            'type' => 'overtime',
+            'title' => 'Pengajuan Lembur Ditolak',
+            'message' => "Pengajuan lembur Anda untuk tanggal {$overtime->date} telah ditolak. Alasan: {$request->rejection_reason}",
+        ]);
+
+        // Send FCM notification
+        FcmHelper::sendToUser(
+            $overtime->user,
+            'Pengajuan Lembur Ditolak',
+            "Pengajuan lembur Anda untuk tanggal {$overtime->date} telah ditolak.",
+            ['type' => 'overtime', 'id' => $overtime->id]
+        );
 
         try {
             SendEmailJob::dispatch(
