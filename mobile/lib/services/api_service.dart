@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiService {
   // Use 10.0.2.2 for Android Emulator to connect to localhost on host machine.
   // Change this to your computer's local IP (e.g. 192.168.1.X) when testing on a physical device.
-  static const String baseUrl = 'http://10.0.2.2:8000/api';
+  static const String baseUrl = 'https://valryze2.laravel.cloud/api';
 
   static const String _tokenKey = 'api_token';
   static const String _userKey = 'user_data';
@@ -494,7 +494,7 @@ class ApiService {
         headers: headers,
         body: jsonEncode({
           'action': action,
-          'rejection_reason': ?rejectionReason,
+          if (rejectionReason != null) 'rejection_reason': rejectionReason,
         }),
       );
       return jsonDecode(response.body) as Map<String, dynamic>;
@@ -638,7 +638,7 @@ class ApiService {
         headers: headers,
         body: jsonEncode({
           'action': action,
-          'rejection_reason': ?rejectionReason,
+          if (rejectionReason != null) 'rejection_reason': rejectionReason,
         }),
       );
       return jsonDecode(response.body) as Map<String, dynamic>;
@@ -696,8 +696,8 @@ class ApiService {
           'shift_id': shiftId,
           'employment_type': employmentType,
           'join_date': joinDate,
-          'phone': ?phone,
-          'gender': ?gender,
+          if (phone != null) 'phone': phone,
+          if (gender != null) 'gender': gender,
         }),
       );
       return jsonDecode(response.body) as Map<String, dynamic>;
