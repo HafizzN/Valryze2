@@ -12,28 +12,28 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('attendances', function (Blueprint $table) {
-            if (!Schema::hasIndex('attendances', ['user_id', 'date'])) {
+            if (!Schema::hasIndex('attendances', 'attendances_user_id_date_index')) {
                 $table->index(['user_id', 'date']);
             }
-            if (!Schema::hasIndex('attendances', 'status')) {
+            if (!Schema::hasIndex('attendances', 'attendances_status_index')) {
                 $table->index('status');
             }
-            if (!Schema::hasIndex('attendances', 'date')) {
+            if (!Schema::hasIndex('attendances', 'attendances_date_index')) {
                 $table->index('date');
             }
         });
 
         Schema::table('leave_requests', function (Blueprint $table) {
-            if (!Schema::hasIndex('leave_requests', ['user_id', 'status'])) {
+            if (!Schema::hasIndex('leave_requests', 'leave_requests_user_id_status_index')) {
                 $table->index(['user_id', 'status']);
             }
-            if (!Schema::hasIndex('leave_requests', 'status')) {
+            if (!Schema::hasIndex('leave_requests', 'leave_requests_status_index')) {
                 $table->index('status');
             }
         });
 
         Schema::table('notifications', function (Blueprint $table) {
-            if (!Schema::hasIndex('notifications', ['notifiable_id', 'read_at'])) {
+            if (!Schema::hasIndex('notifications', 'notifications_notifiable_id_read_at_index')) {
                 $table->index(['notifiable_id', 'read_at']);
             }
         });
