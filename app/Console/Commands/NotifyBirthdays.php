@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Models\User;
 use App\Models\Notification;
 use Carbon\Carbon;
+use App\Helpers\FcmHelper;
 
 class NotifyBirthdays extends Command
 {
@@ -42,7 +43,7 @@ class NotifyBirthdays extends Command
             $this->info("Today is {$user->name}'s birthday!");
 
             // Send congratulations directly to the birthday user
-            Notification::create([
+            $notification = Notification::create([
                 'user_id' => $user->id,
                 'type' => 'birthday',
                 'title' => 'Selamat Ulang Tahun! 🎂',
@@ -50,6 +51,9 @@ class NotifyBirthdays extends Command
                 'icon' => 'cake',
                 'color' => 'pink',
             ]);
+            
+            // Send FCM notification
+            FcmHelper::sendToUser($user, $notification->title, $notification->message, ['type' => 'birthday']);
         }
 
         // 2. Check who has a birthday TOMORROW
@@ -66,7 +70,7 @@ class NotifyBirthdays extends Command
 
                 // Notify HRD and Super Admins
                 foreach ($hrdAndManagers as $recipient) {
-                    Notification::create([
+                    $notification = Notification::create([
                         'user_id' => $recipient->id,
                         'type' => 'birthday_alert',
                         'title' => 'Besok Rekan Kerja Ulang Tahun! 🎉',
@@ -74,6 +78,9 @@ class NotifyBirthdays extends Command
                         'icon' => 'calendar_today',
                         'color' => 'blue',
                     ]);
+                    
+                    // Send FCM notification
+                    FcmHelper::sendToUser($recipient, $notification->title, $notification->message, ['type' => 'birthday_alert']);
                 }
             }
         }

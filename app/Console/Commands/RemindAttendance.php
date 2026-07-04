@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Attendance;
 use App\Models\Notification;
 use Carbon\Carbon;
+use App\Helpers\FcmHelper;
 
 class RemindAttendance extends Command
 {
@@ -62,7 +63,7 @@ class RemindAttendance extends Command
 
                     if (!$alreadyReminded) {
                         $this->info("Sending check-in reminder to {$user->name}...");
-                        Notification::create([
+                        $notification = Notification::create([
                             'user_id' => $user->id,
                             'type'    => 'attendance_reminder_in',
                             'title'   => 'Pengingat Presensi Masuk ⏰',
@@ -70,6 +71,9 @@ class RemindAttendance extends Command
                             'icon'    => 'alarm',
                             'color'   => '#F59E0B', // Amber
                         ]);
+                        
+                        // Send FCM notification
+                        FcmHelper::sendToUser($user, $notification->title, $notification->message, ['type' => 'attendance_reminder_in']);
                     }
                 }
             }
@@ -98,7 +102,7 @@ class RemindAttendance extends Command
 
                     if (!$alreadyReminded) {
                         $this->info("Sending check-out reminder to {$user->name}...");
-                        Notification::create([
+                        $notification = Notification::create([
                             'user_id' => $user->id,
                             'type'    => 'attendance_reminder_out',
                             'title'   => 'Pengingat Presensi Pulang ⏰',
@@ -106,6 +110,9 @@ class RemindAttendance extends Command
                             'icon'    => 'alarm_on',
                             'color'   => '#10B981', // Emerald
                         ]);
+                        
+                        // Send FCM notification
+                        FcmHelper::sendToUser($user, $notification->title, $notification->message, ['type' => 'attendance_reminder_out']);
                     }
                 }
             }
