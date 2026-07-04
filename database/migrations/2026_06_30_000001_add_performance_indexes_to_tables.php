@@ -12,18 +12,30 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('attendances', function (Blueprint $table) {
-            $table->index(['user_id', 'date']);
-            $table->index('status');
-            $table->index('date');
+            if (!Schema::hasIndex('attendances', ['user_id', 'date'])) {
+                $table->index(['user_id', 'date']);
+            }
+            if (!Schema::hasIndex('attendances', 'status')) {
+                $table->index('status');
+            }
+            if (!Schema::hasIndex('attendances', 'date')) {
+                $table->index('date');
+            }
         });
 
         Schema::table('leave_requests', function (Blueprint $table) {
-            $table->index(['user_id', 'status']);
-            $table->index('status');
+            if (!Schema::hasIndex('leave_requests', ['user_id', 'status'])) {
+                $table->index(['user_id', 'status']);
+            }
+            if (!Schema::hasIndex('leave_requests', 'status')) {
+                $table->index('status');
+            }
         });
 
         Schema::table('notifications', function (Blueprint $table) {
-            $table->index(['notifiable_id', 'read_at']);
+            if (!Schema::hasIndex('notifications', ['notifiable_id', 'read_at'])) {
+                $table->index(['notifiable_id', 'read_at']);
+            }
         });
     }
 
