@@ -1,14 +1,23 @@
+import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'api_service.dart';
 import '../screens/payslips_screen.dart';
 import '../screens/announcements_screen.dart';
 import '../screens/leave_requests_screen.dart';
-import '../main.dart'; // to get navigatorKey
+import '../main.dart';
 
 class NotificationService {
   static bool _isInitialized = false;
+  static final FlutterLocalNotificationsPlugin _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  static const String _channelId = 'valryze_notifications';
+  static const String _channelName = 'Valryze Notifications';
+  static const String _channelDescription = 'Notifications from Valryze HR System';
+  static const String _customSoundFileName = 'notif_sound.mp3';
 
   /// Initialize Firebase and FCM configurations
   static Future<void> initialize() async {
@@ -18,6 +27,9 @@ class NotificationService {
       await Firebase.initializeApp();
       _isInitialized = true;
       debugPrint("Firebase successfully initialized for notifications.");
+
+      // Setup local notifications with custom sound
+      await _setupLocalNotifications();
 
       final messaging = FirebaseMessaging.instance;
 
@@ -50,6 +62,7 @@ class NotificationService {
       // 4. Handle incoming messages in foreground
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         debugPrint("Received a foreground push notification: ${message.notification?.title}");
+        _showLocalNotification(message);
       });
 
       // 5. Handle notification taps (Deep Linking)
@@ -70,6 +83,86 @@ class NotificationService {
       });
     } catch (e) {
       debugPrint("Error initializing NotificationService: $e");
+    }
+  }
+
+  /// Setup local notifications plugin
+  static Future<void> _setupLocalNotifications() async {
+    // Initialize plugin
+    const androidInitializationSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const iosInitializationSettings = DarwinInitializationSettings();
+    const initializationSettings = InitializationSettings(
+      android: androidInitializationSettings,
+      iOS: iosInitializationSettings,
+    );
+
+    await _localNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        debugPrint("Local notification tapped: ${response.payload}");
+      },
+    );
+
+    // Create notification channel with custom sound (Android only)
+    if (Platform.isAndroid) {
+      await _createAndroidNotificationChannel();
+    }
+  }
+
+  /// Create Android notification channel with custom sound
+  static Future<void> _createAndroidNotificationChannel() async {
+    final AndroidNotificationChannel channel = AndroidNotificationChannel(
+      _channelId,
+      _channelName,
+      description: _channelDescription,
+      importance: Importance.max,
+      sound: RawResourceAndroidNotificationSound(_customSoundFileName.replaceAll('.mp3', '')),
+      playSound: true,
+    );
+
+    await _localNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
+  }
+
+  /// Show local notification with custom sound
+  static Future<void> _showLocalNotification(RemoteMessage message) async {
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
+
+    if (notification != null) {
+      // Determine if we should use custom sound or default
+      String? soundName = message.data['sound'];
+      bool useCustomSound = soundName == null || soundName == 'default' ? false : true;
+
+      const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        _channelId,
+        _channelName,
+        channelDescription: _channelDescription,
+        importance: Importance.max,
+        priority: Priority.high,
+        playSound: true,
+        sound: RawResourceAndroidNotificationSound(_customSoundFileName.replaceAll('.mp3', '')),
+        // Also support default sound as fallback
+        // sound: const AndroidNotificationSound.uri(Uri.parse('resource://raw/$_customSoundFileName')),
+      );
+
+      const DarwinNotificationDetails iosPlatformChannelSpecifics = DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+      );
+
+      const NotificationDetails platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iosPlatformChannelSpecifics,
+      );
+
+      await _localNotificationsPlugin.show(
+        notification.hashCode,
+        notification.title,
+        notification.body,
+        platformChannelSpecifics,
+        payload: message.data['type'],
+      );
     }
   }
 
