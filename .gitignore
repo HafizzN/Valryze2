@@ -19,7 +19,9 @@
 /public/storage
 /storage/*.key
 /storage/pail
+/storage/app/firebase-service-account.json
 /vendor
+google-services.json
 Homestead.json
 Homestead.yaml
 Thumbs.db
