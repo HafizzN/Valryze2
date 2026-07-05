@@ -64,6 +64,7 @@ class ApiService {
   /// POST /login
   static Future<Map<String, dynamic>> login(String email, String password) async {
     try {
+      print('📡 Connecting to: $baseUrl/login');
       final response = await http.post(
         Uri.parse('$baseUrl/login'),
         headers: {
@@ -74,7 +75,10 @@ class ApiService {
           'email': email,
           'password': password,
         }),
-      );
+      ).timeout(const Duration(seconds: 30));
+
+      print('📥 Response status: ${response.statusCode}');
+      print('📥 Response body: ${response.body}');
 
       final data = jsonDecode(response.body) as Map<String, dynamic>;
 
@@ -86,7 +90,9 @@ class ApiService {
       }
 
       return data;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      print('❌ Error: $e');
+      print('❌ Stack trace: $stackTrace');
       return {
         'success': false,
         'message': 'Gagal menghubungkan ke server: $e',

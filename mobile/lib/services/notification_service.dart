@@ -17,7 +17,7 @@ class NotificationService {
   static const String _channelId = 'valryze_notifications';
   static const String _channelName = 'Valryze Notifications';
   static const String _channelDescription = 'Notifications from Valryze HR System';
-  static const String _customSoundFileName = 'notif.mp3';
+  static const String _customSoundFileName = 'notif'; // Without extension for Android raw resource
 
   /// Initialize Firebase and FCM configurations
   static Future<void> initialize() async {
@@ -116,8 +116,8 @@ class NotificationService {
       _channelName,
       description: _channelDescription,
       importance: Importance.max,
-      sound: RawResourceAndroidNotificationSound(_customSoundFileName.replaceAll('.mp3', '')),
-      playSound: true,
+            sound: RawResourceAndroidNotificationSound(_customSoundFileName),
+            playSound: true,
     );
 
     await _localNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
@@ -133,14 +133,14 @@ class NotificationService {
       String? soundName = message.data['sound'];
       bool useCustomSound = soundName == null || soundName == 'default' ? false : true;
 
-      const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      final AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
         _channelId,
         _channelName,
         channelDescription: _channelDescription,
         importance: Importance.max,
         priority: Priority.high,
         playSound: true,
-        sound: RawResourceAndroidNotificationSound(_customSoundFileName.replaceAll('.mp3', '')),
+        sound: RawResourceAndroidNotificationSound(_customSoundFileName),
         // Also support default sound as fallback
         // sound: const AndroidNotificationSound.uri(Uri.parse('resource://raw/$_customSoundFileName')),
       );
@@ -151,7 +151,7 @@ class NotificationService {
         presentSound: true,
       );
 
-      const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      final NotificationDetails platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics,
         iOS: iosPlatformChannelSpecifics,
       );

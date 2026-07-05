@@ -52,6 +52,19 @@ class FcmService
                         'title' => $title,
                         'body' => $body,
                     ],
+                    'android' => [
+                        'notification' => [
+                            'sound' => 'notif',
+                            'channel_id' => 'valryze_notifications',
+                        ]
+                    ],
+                    'apns' => [
+                        'payload' => [
+                            'aps' => [
+                                'sound' => 'notif.mp3',
+                            ]
+                        ]
+                    ],
                 ]
             ];
 
