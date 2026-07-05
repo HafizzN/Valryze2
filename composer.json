@@ -102,15 +102,15 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
-        "allow-plugins": {
-            "pestphp/pest-plugin": true,
-            "php-http/discovery": true
-        },
+        "allow-plugins": true,
         "platform": {
-            "php": "8.2.0"
+            "php": "8.3.0"
         },
         "platform-check": false,
-        "github-domains": []
+        "github-domains": [],
+        "audit": {
+            "block-insecure": false
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
