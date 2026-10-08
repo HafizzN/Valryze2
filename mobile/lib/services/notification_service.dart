@@ -3,8 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'api_service.dart';
 import '../screens/payslips_screen.dart';
 import '../screens/announcements_screen.dart';
@@ -126,12 +124,8 @@ class NotificationService {
   /// Show local notification with custom sound
   static Future<void> _showLocalNotification(RemoteMessage message) async {
     RemoteNotification? notification = message.notification;
-    AndroidNotification? android = message.notification?.android;
 
     if (notification != null) {
-      // Determine if we should use custom sound or default
-      String? soundName = message.data['sound'];
-      bool useCustomSound = soundName == null || soundName == 'default' ? false : true;
 
       final AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
         _channelId,

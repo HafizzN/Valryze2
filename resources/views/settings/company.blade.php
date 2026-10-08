@@ -41,19 +41,22 @@
                 <h3 style="font-size:0.65rem;font-weight:800;color:var(--em);text-transform:uppercase;letter-spacing:0.08em;border-bottom:1px solid var(--border-dim);padding-bottom:0.4rem;">Identitas Utama</h3>
                 
                 <div style="display:grid;grid-template-columns:1fr;gap:1rem;">
-                    {{-- Logo Upload --}}
-                    <div style="display:flex;flex-direction:column;gap:1rem;padding:1rem;background:var(--bg-elevated);border:1px solid var(--border-soft);border-radius:12px;overflow:hidden;" class="md:flex-row items-center">
-                        <div style="position:relative;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
-                            @if($company->logo_url)
-                                <img src="{{ $company->logo_url }}" alt="Company Logo" style="width:70px;height:70px;border-radius:10px;object-fit:contain;background:var(--bg-base);border:1px solid var(--border-soft);display:block;max-width:100%;">
-                            @else
-                                <div style="width:70px;height:70px;border-radius:10px;background:var(--bg-base);border:1px solid var(--border-soft);display:flex;align-items:center;justify-content:center;color:var(--t4);font-weight:800;font-size:1.4rem;">CO</div>
-                            @endif
+                    <div style="display:flex;flex-direction:column;gap:1.25rem;padding:1.25rem;background:var(--bg-elevated);border:1px solid var(--border-soft);border-radius:4px;" class="md:flex-row items-center">
+                        <div style="position:relative;flex-shrink:0;width:72px;height:72px;border-radius:4px;border:1px solid var(--border-soft);background:#FFFFFF;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                            <img id="logo-preview-img"
+                                 src="{{ $company->logo_url ? $company->logo_url : '' }}" 
+                                 alt="{{ $company->name }}"
+                                 style="width:100%;height:100%;object-fit:contain;{{ $company->logo_url ? 'display:block;' : 'display:none;' }}"
+                                 onerror="this.style.display='none'; document.getElementById('logo-fallback-placeholder').style.display='flex';">
+                            <div id="logo-fallback-placeholder" 
+                                 style="width:100%;height:100%;display:{{ $company->logo_url ? 'none' : 'flex' }};align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;color:#007BFF;background:#F8F8F8;">
+                                {{ strtoupper(substr($company->name ?? 'CO', 0, 2)) }}
+                            </div>
                         </div>
-                        <div style="flex:1;min-width:0;">
-                            <label class="form-label" for="logo">Logo Perusahaan</label>
-                            <input type="file" name="logo" id="logo" class="form-control" accept="image/*" style="font-size:0.75rem;padding:0.45rem 0.75rem;">
-                            <p style="font-size:0.62rem;color:var(--t5);margin-top:0.25rem;">Rasio persegi (1:1) direkomendasikan, Maksimal 2MB (JPG, PNG)</p>
+                        <div style="flex:1;min-width:0;width:100%;">
+                            <label class="form-label" for="logo">Unggah Logo Perusahaan Baru</label>
+                            <input type="file" name="logo" id="logo" class="form-control" accept="image/png, image/jpeg, image/jpg, image/webp, image/svg+xml" style="font-size:0.8125rem;padding:0.45rem 0.75rem;cursor:pointer;" onchange="previewCompanyLogo(this)">
+                            <p style="font-size:0.72rem;color:var(--t4);margin-top:0.35rem;">Format didukung: JPG, PNG, WEBP, SVG (Maks. 2MB). Rasio persegi atau horizontal.</p>
                         </div>
                     </div>
                 </div>
@@ -175,3 +178,27 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function previewCompanyLogo(input) {
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.getElementById('logo-preview-img');
+            const fallback = document.getElementById('logo-fallback-placeholder');
+            if (img) {
+                img.src = e.target.result;
+                img.style.display = 'block';
+            }
+            if (fallback) {
+                fallback.style.display = 'none';
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+}
+</script>
+@endpush
+

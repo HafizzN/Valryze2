@@ -208,17 +208,15 @@ class _MainNavigationHolderState extends State<MainNavigationHolder> {
     ValryzeRoleStyle style,
   ) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(8, 6, 8, 8),
+      padding: const EdgeInsets.fromLTRB(6, 4, 6, 6),
       decoration: BoxDecoration(
         color: ValryzeDesign.cardBackground(context),
         border: Border(top: BorderSide(color: ValryzeDesign.divider(context))),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(
-              Theme.of(context).brightness == Brightness.dark ? 0.24 : 0.07,
-            ),
-            blurRadius: 18,
-            offset: const Offset(0, -6),
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 4,
+            offset: const Offset(0, -1),
           ),
         ],
       ),
@@ -233,18 +231,18 @@ class _MainNavigationHolderState extends State<MainNavigationHolder> {
             return Expanded(
               child: InkWell(
                 onTap: () => setState(() => _currentIndex = index),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(4),
                 child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 180),
+                  duration: const Duration(milliseconds: 150),
                   padding: const EdgeInsets.symmetric(
-                    vertical: 7,
+                    vertical: 6,
                     horizontal: 2,
                   ),
                   decoration: BoxDecoration(
                     color: active
-                        ? style.accent.withOpacity(0.14)
+                        ? style.accent.withOpacity(0.08)
                         : Colors.transparent,
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(4),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -253,10 +251,8 @@ class _MainNavigationHolderState extends State<MainNavigationHolder> {
                         data: IconThemeData(
                           color: active
                               ? style.accent
-                              : ValryzeDesign.secondaryText(
-                                  context,
-                                ).withOpacity(0.55),
-                          size: active ? 22 : 20,
+                              : ValryzeDesign.secondaryText(context),
+                          size: active ? 21 : 19,
                         ),
                         child: iconWidget,
                       ),
@@ -268,13 +264,11 @@ class _MainNavigationHolderState extends State<MainNavigationHolder> {
                         style: TextStyle(
                           color: active
                               ? style.accent
-                              : ValryzeDesign.secondaryText(
-                                  context,
-                                ).withOpacity(0.55),
-                          fontSize: 9,
+                              : ValryzeDesign.secondaryText(context),
+                          fontSize: 10,
                           fontWeight: active
-                              ? FontWeight.w800
-                              : FontWeight.w500,
+                              ? FontWeight.w600
+                              : FontWeight.w400,
                         ),
                       ),
                     ],

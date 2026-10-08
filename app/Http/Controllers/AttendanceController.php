@@ -81,7 +81,8 @@ class AttendanceController extends Controller
         $lat       = (float) $request->latitude;
         $lng       = (float) $request->longitude;
         $accuracy  = (float) $request->accuracy;
-        $bypass    = $request->boolean('bypass_restrictions');
+        // Security check: Only super_admin, hrd, or manager can use bypass_restrictions
+        $bypass    = $request->boolean('bypass_restrictions') && $user->hasRole(['super_admin', 'hrd', 'manager']);
 
         // Block if already has an active session
         $activeAttendance = $this->getActiveAttendance($user);
@@ -258,7 +259,8 @@ class AttendanceController extends Controller
         $user  = Auth::user();
         $lat   = (float) $request->latitude;
         $lng   = (float) $request->longitude;
-        $bypass = $request->boolean('bypass_restrictions');
+        // Security check: Only super_admin, hrd, or manager can use bypass_restrictions
+        $bypass = $request->boolean('bypass_restrictions') && $user->hasRole(['super_admin', 'hrd', 'manager']);
 
         $attendance = $this->getActiveAttendance($user);
         if (!$attendance) {

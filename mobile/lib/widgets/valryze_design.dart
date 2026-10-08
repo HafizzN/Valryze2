@@ -21,35 +21,36 @@ class ValryzeRoleStyle {
 }
 
 class ValryzeDesign {
-  static const background = Color(0xFFEFF6FF);
-  static const darkBackground = Color(0xFF071524);
-  static const text = Color(0xFF0F172A);
-  static const muted = Color(0xFF64748B);
-  static const subtle = Color(0xFF94A3B8);
-  static const cyan = Color(0xFF06B6D4);
-  static const green = Color(0xFF34D399);
-  static const indigo = Color(0xFF818CF8);
-  static const danger = Color(0xFFEF4444);
-  static const amber = Color(0xFFF59E0B);
+  // Minimalismo Funcional B2B Color Tokens
+  static const background = Color(0xFFF8F8F8);
+  static const darkBackground = Color(0xFF212529);
+  static const text = Color(0xFF212529);
+  static const muted = Color(0xFF6C757D);
+  static const subtle = Color(0xFFADB5BD);
+
+  // Corporate & Semantic Accents
+  static const cyan = Color(0xFF007BFF); // Corporate Blue
+  static const blue = Color(0xFF007BFF);
+  static const green = Color(0xFF28A745); // Soft Green (Success)
+  static const indigo = Color(0xFF007BFF);
+  static const danger = Color(0xFFDC3545); // Soft Red (Error)
+  static const amber = Color(0xFFFFC107); // Mustard Yellow (Warning)
+
   static const textPrimary = text;
   static const textMuted = muted;
-  static const border = Color(0xFFDBEAFE);
+  static const border = Color(0xFFDEE2E6);
   static const lightCard = Color(0xFFFFFFFF);
-  static const darkCard = Color(0xFF0D1F38);
-  static const lightSurface = Color(0xFFF8FBFF);
-  static const darkSurface = Color(0xFF0A192D);
-  static const phoneChrome = Color(0xFF0A0F1E);
+  static const darkCard = Color(0xFF2B3035);
+  static const lightSurface = Color(0xFFFFFFFF);
+  static const darkSurface = Color(0xFF212529);
+  static const phoneChrome = Color(0xFF212529);
 
+  // Subtle shadows (no heavy blur)
   static List<BoxShadow> get softShadow => [
     BoxShadow(
-      color: Colors.black.withOpacity(0.07),
-      blurRadius: 24,
-      offset: const Offset(0, 8),
-    ),
-    BoxShadow(
-      color: Colors.black.withOpacity(0.04),
-      blurRadius: 6,
-      offset: const Offset(0, 1),
+      color: Colors.black.withOpacity(0.05),
+      blurRadius: 8,
+      offset: const Offset(0, 2),
     ),
   ];
 
@@ -68,43 +69,38 @@ class ValryzeDesign {
       isDark(context) ? darkSurface : lightCard;
 
   static Color primaryText(BuildContext context) =>
-      isDark(context) ? const Color(0xFFE2E8F0) : text;
+      isDark(context) ? const Color(0xFFF8F9FA) : text;
 
   static Color secondaryText(BuildContext context) =>
-      isDark(context) ? const Color(0xFF94A3B8) : muted;
+      isDark(context) ? const Color(0xFFADB5BD) : muted;
 
   static Color divider(BuildContext context) =>
-      isDark(context) ? cyan.withOpacity(0.14) : border;
+      isDark(context) ? const Color(0xFF343A40) : border;
 
   static Color quietSurface(BuildContext context) =>
-      isDark(context) ? darkSurface : lightSurface;
+      isDark(context) ? darkSurface : background;
 
   static Color hoverSurface(BuildContext context) =>
-      isDark(context) ? cyan.withOpacity(0.07) : const Color(0xFFEFF6FF);
+      isDark(context) ? const Color(0xFF343A40) : const Color(0xFFF1F3F5);
 
   static BorderSide softBorder(BuildContext context) =>
       BorderSide(color: divider(context));
 
   static LinearGradient appBackdrop(BuildContext context) => LinearGradient(
     colors: isDark(context)
-        ? const [Color(0xFF0A0F1E), Color(0xFF111827), Color(0xFF0F1A2E)]
-        : const [Color(0xFFEFF6FF), Color(0xFFF8FBFF), Color(0xFFE0F2FE)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
+        ? const [Color(0xFF1E2227), Color(0xFF212529)]
+        : const [Color(0xFFF8F8F8), Color(0xFFF8F8F8)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
   );
 
   static List<BoxShadow> cardShadow(BuildContext context) {
     if (isDark(context)) {
       return [
         BoxShadow(
-          color: Colors.black.withOpacity(0.28),
-          blurRadius: 24,
-          offset: const Offset(0, 10),
-        ),
-        BoxShadow(
-          color: cyan.withOpacity(0.03),
+          color: Colors.black.withOpacity(0.2),
           blurRadius: 8,
-          offset: const Offset(0, 1),
+          offset: const Offset(0, 2),
         ),
       ];
     }
@@ -117,28 +113,28 @@ class ValryzeDesign {
         return const ValryzeRoleStyle(
           role: 'hrd',
           accent: cyan,
-          navBg: Color(0xFF071830),
-          heroStart: Color(0xFF071830),
-          heroEnd: Color(0xFF0369A1),
+          navBg: Colors.white,
+          heroStart: Colors.white,
+          heroEnd: Colors.white,
           roleLabel: 'HR Dashboard',
         );
       case 'manager':
         return const ValryzeRoleStyle(
           role: 'manager',
-          accent: indigo,
-          navBg: Color(0xFF1E1B4B),
-          heroStart: Color(0xFF1E1B4B),
-          heroEnd: Color(0xFF4338CA),
+          accent: cyan,
+          navBg: Colors.white,
+          heroStart: Colors.white,
+          heroEnd: Colors.white,
           roleLabel: 'Manager Portal',
         );
       case 'karyawan':
       default:
         return const ValryzeRoleStyle(
           role: 'karyawan',
-          accent: green,
-          navBg: Color(0xFF052E16),
-          heroStart: Color(0xFF064E3B),
-          heroEnd: Color(0xFF047857),
+          accent: cyan,
+          navBg: Colors.white,
+          heroStart: Colors.white,
+          heroEnd: Colors.white,
           roleLabel: 'Portal Karyawan',
         );
     }
@@ -157,21 +153,10 @@ class ValryzeLogoMark extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [color, color.withOpacity(0.72)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(size * 0.36),
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.38),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        color: color,
+        borderRadius: BorderRadius.circular(4),
       ),
-      child: Icon(Icons.bolt_rounded, color: Colors.white, size: size * 0.58),
+      child: Icon(Icons.bolt_rounded, color: Colors.white, size: size * 0.65),
     );
   }
 }
@@ -200,24 +185,12 @@ class ValryzeAvatar extends StatelessWidget {
       width: effectiveSize,
       height: effectiveSize,
       decoration: BoxDecoration(
-        gradient: hasPhoto
-            ? null
-            : LinearGradient(
-                colors: [color, color.withOpacity(0.7)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-        borderRadius: BorderRadius.circular(effectiveSize * 0.38),
+        color: hasPhoto ? null : ValryzeDesign.quietSurface(context),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: ValryzeDesign.divider(context)),
         image: hasPhoto
             ? DecorationImage(image: NetworkImage(photoUrl!), fit: BoxFit.cover)
             : null,
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.26),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: hasPhoto
           ? null
@@ -225,9 +198,9 @@ class ValryzeAvatar extends StatelessWidget {
               child: Text(
                 initials(name),
                 style: TextStyle(
-                  color: Colors.white,
-                  fontSize: effectiveSize * 0.28,
-                  fontWeight: FontWeight.w800,
+                  color: color,
+                  fontSize: effectiveSize * 0.35,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),
@@ -267,17 +240,18 @@ class ValryzeAppHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = ValryzeDesign.isDark(context);
     return Container(
       padding: EdgeInsets.fromLTRB(
         18,
-        MediaQuery.of(context).padding.top + 12,
+        MediaQuery.of(context).padding.top + 10,
         16,
-        14,
+        12,
       ),
       decoration: BoxDecoration(
-        color: style.navBg,
+        color: isDark ? ValryzeDesign.darkCard : Colors.white,
         border: Border(
-          bottom: BorderSide(color: Colors.white.withOpacity(0.06)),
+          bottom: BorderSide(color: ValryzeDesign.divider(context)),
         ),
       ),
       child: Row(
@@ -285,15 +259,15 @@ class ValryzeAppHeader extends StatelessWidget {
         children: [
           Row(
             children: [
-              ValryzeLogoMark(color: style.accent, size: 22),
+              ValryzeLogoMark(color: style.accent, size: 24),
               const SizedBox(width: 8),
               RichText(
                 text: TextSpan(
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 17,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1.8,
+                  style: TextStyle(
+                    color: isDark ? Colors.white : ValryzeDesign.text,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 1.2,
                   ),
                   children: [
                     const TextSpan(text: 'VAL'),
@@ -324,13 +298,6 @@ class ValryzeAppHeader extends StatelessWidget {
       ),
     );
   }
-
-  String _greeting() {
-    final hour = DateTime.now().hour;
-    if (hour < 11) return 'Good Morning';
-    if (hour < 15) return 'Good Afternoon';
-    return 'Good Evening';
-  }
 }
 
 class _HeaderIcon extends StatelessWidget {
@@ -345,7 +312,7 @@ class _HeaderIcon extends StatelessWidget {
       visualDensity: VisualDensity.compact,
       constraints: const BoxConstraints(minWidth: 34, minHeight: 34),
       onPressed: onTap,
-      icon: Icon(icon, color: Colors.white.withOpacity(0.72), size: 19),
+      icon: Icon(icon, color: ValryzeDesign.muted, size: 20),
     );
   }
 }
@@ -373,20 +340,10 @@ class ValryzeHeroCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [style.heroStart, style.heroEnd],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.white.withOpacity(0.08)),
-        boxShadow: [
-          BoxShadow(
-            color: style.heroEnd.withOpacity(0.34),
-            blurRadius: 32,
-            offset: const Offset(0, 10),
-          ),
-        ],
+        color: ValryzeDesign.cardBackground(context),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: ValryzeDesign.divider(context)),
+        boxShadow: ValryzeDesign.cardShadow(context),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -396,46 +353,47 @@ class ValryzeHeroCard extends StatelessWidget {
             style: TextStyle(
               color: style.accent,
               fontSize: 10,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 1,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.8,
             ),
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 4),
           Text(
             name ?? title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 19,
-              fontWeight: FontWeight.w900,
+            style: TextStyle(
+              color: ValryzeDesign.primaryText(context),
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.01,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             subtitle,
             style: TextStyle(
-              color: Colors.white.withOpacity(0.58),
+              color: ValryzeDesign.secondaryText(context),
               fontSize: 12,
             ),
           ),
           if (stats.isNotEmpty) ...[
-            const SizedBox(height: 18),
+            const SizedBox(height: 16),
             Row(
               children: stats
                   .map(
                     (stat) => Expanded(
                       child: Container(
                         margin: EdgeInsets.only(
-                          right: stat == stats.last ? 0 : 9,
+                          right: stat == stats.last ? 0 : 8,
                         ),
                         padding: const EdgeInsets.symmetric(
-                          vertical: 12,
+                          vertical: 10,
                           horizontal: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(15),
+                          color: ValryzeDesign.quietSurface(context),
+                          borderRadius: BorderRadius.circular(4),
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.12),
+                            color: ValryzeDesign.divider(context),
                           ),
                         ),
                         child: Column(
@@ -446,18 +404,19 @@ class ValryzeHeroCard extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color: stat.color ?? style.accent,
-                                fontSize: 17,
-                                fontWeight: FontWeight.w900,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
-                            const SizedBox(height: 3),
+                            const SizedBox(height: 2),
                             Text(
                               stat.label,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.5),
+                                color: ValryzeDesign.secondaryText(context),
                                 fontSize: 10,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ],
@@ -486,9 +445,9 @@ class ValryzeCard extends StatelessWidget {
   const ValryzeCard({
     super.key,
     required this.child,
-    this.padding = const EdgeInsets.all(18),
+    this.padding = const EdgeInsets.all(16),
     this.margin,
-    this.radius = 20,
+    this.radius = 4,
   });
 
   final Widget child;
@@ -527,25 +486,25 @@ class ValryzeStatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: color.withOpacity(0.08)),
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: color.withOpacity(0.2)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (icon != null) ...[
-            Icon(icon, color: color, size: 11),
+            Icon(icon, color: color, size: 12),
             const SizedBox(width: 4),
           ],
           Text(
             label,
             style: TextStyle(
               color: color,
-              fontSize: 11,
-              fontWeight: FontWeight.w800,
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -572,12 +531,12 @@ class ValryzeQuickTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(18),
+      borderRadius: BorderRadius.circular(4),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: ValryzeDesign.cardBackground(context),
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(4),
           border: Border.all(color: ValryzeDesign.divider(context)),
           boxShadow: ValryzeDesign.cardShadow(context),
         ),
@@ -585,23 +544,24 @@ class ValryzeQuickTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 34,
-              height: 34,
+              width: 32,
+              height: 32,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.12),
-                borderRadius: BorderRadius.circular(13),
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(4),
               ),
-              child: Icon(icon, color: color, size: 19),
+              child: Icon(icon, color: color, size: 18),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             Text(
               label,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
-                fontWeight: FontWeight.w800,
-              ).copyWith(color: ValryzeDesign.primaryText(context)),
+                fontWeight: FontWeight.w600,
+                color: ValryzeDesign.primaryText(context),
+              ),
             ),
           ],
         ),
@@ -625,7 +585,7 @@ class ValryzeSectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
           Expanded(
@@ -633,23 +593,24 @@ class ValryzeSectionHeader extends StatelessWidget {
               title,
               style: TextStyle(
                 color: ValryzeDesign.primaryText(context),
-                fontSize: 12,
-                fontWeight: FontWeight.w900,
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                letterSpacing: -0.01,
               ),
             ),
           ),
           if (action != null)
             InkWell(
               onTap: onAction,
-              borderRadius: BorderRadius.circular(999),
+              borderRadius: BorderRadius.circular(4),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 child: Text(
                   action!,
                   style: const TextStyle(
                     color: ValryzeDesign.cyan,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w800,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),

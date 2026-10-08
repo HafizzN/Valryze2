@@ -292,7 +292,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Kembali ke Dashboard', style: TextStyle(color: Color(0xFF6366F1))),
+            child: const Text('Kembali ke Dashboard', style: TextStyle(color: Color(0xFF007BFF))),
           ),
         ],
       ),
@@ -350,8 +350,8 @@ class _CheckInScreenState extends State<CheckInScreen> {
                   ElevatedButton(
                     onPressed: canSubmit ? _submitCheckIn : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6366F1),
-                      disabledBackgroundColor: const Color(0xFF1E293B),
+                      backgroundColor: const Color(0xFF007BFF),
+                      disabledBackgroundColor: const Color(0xFFDEE2E6),
                     ),
                     child: const Text('KIRIM ABSEN MASUK'),
                   ),
@@ -432,9 +432,9 @@ class _CheckInScreenState extends State<CheckInScreen> {
                         ),
                       )
                     : Container(
-                        color: const Color(0xFF0F172A),
+                        color: const Color(0xFFF8F8F8),
                         child: const Center(
-                          child: CircularProgressIndicator(strokeWidth: 2),
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF007BFF)),
                         ),
                       ),
           ),

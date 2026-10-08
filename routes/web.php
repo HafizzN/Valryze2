@@ -16,9 +16,9 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
-// ─── Redirect root to dashboard ──────────────────────────────────────────────
+// ─── Root route ─────────────────────────────────────────────────────────────
 Route::get('/', function () {
-    return auth()->check() ? redirect()->route('dashboard') : redirect()->route('login');
+    return auth()->check() ? redirect()->route('dashboard') : view('welcome');
 });
 
 // ─── Auth routes (Breeze) ─────────────────────────────────────────────────────
@@ -72,8 +72,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('letters/{letter}/download', [LetterController::class, 'download'])->name('letters.download');
 
     // ─── Documents ───────────────────────────────────────────────────────────
-    Route::resource('documents', CompanyDocumentController::class);
+    Route::get('documents', [CompanyDocumentController::class, 'index'])->name('documents.index');
     Route::get('documents/{document}/download', [CompanyDocumentController::class, 'download'])->name('documents.download');
+    Route::middleware(['role:super_admin|hrd'])->group(function () {
+        Route::get('documents/create', [CompanyDocumentController::class, 'create'])->name('documents.create');
+        Route::post('documents', [CompanyDocumentController::class, 'store'])->name('documents.store');
+        Route::get('documents/{document}', [CompanyDocumentController::class, 'show'])->name('documents.show');
+        Route::delete('documents/{document}', [CompanyDocumentController::class, 'destroy'])->name('documents.destroy');
+    });
 
     // ─── Announcements (Pengumuman) ──────────────────────────────────────────
     Route::middleware(['role:super_admin|hrd|manager'])->group(function () {

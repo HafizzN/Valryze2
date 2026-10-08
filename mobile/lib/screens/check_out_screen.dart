@@ -280,7 +280,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Kembali ke Dashboard', style: TextStyle(color: Color(0xFF6366F1))),
+            child: const Text('Kembali ke Dashboard', style: TextStyle(color: Color(0xFF007BFF))),
           ),
         ],
       ),
@@ -340,8 +340,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                   ElevatedButton(
                     onPressed: canSubmit ? _submitCheckOut : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.secondary, // Emerald Green
-                      disabledBackgroundColor: const Color(0xFF1E293B),
+                      backgroundColor: const Color(0xFF28A745), // B2B Green for checkout
+                      disabledBackgroundColor: const Color(0xFFDEE2E6),
                     ),
                     child: const Text('KIRIM ABSEN PULANG'),
                   ),
@@ -422,9 +422,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                         ),
                       )
                     : Container(
-                        color: const Color(0xFF0F172A),
+                        color: const Color(0xFFF8F8F8),
                         child: const Center(
-                          child: CircularProgressIndicator(strokeWidth: 2),
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF28A745)),
                         ),
                       ),
           ),

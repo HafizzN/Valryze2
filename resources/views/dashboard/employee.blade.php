@@ -9,42 +9,28 @@
     /* Karyawan Dashboard Styles */
     .emp-hero {
         position: relative; overflow: hidden;
-        background: linear-gradient(135deg, #071830 0%, #0D2A4A 50%, #0A2240 100%);
-        border: 1px solid rgba(6,182,212,0.18);
-        border-radius: 20px; padding: 1.75rem 2rem;
+        background: #FFFFFF;
+        border: 1px solid #DEE2E6;
+        border-radius: 4px; padding: 1.75rem 2rem;
         margin-bottom: 1.5rem;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
-    .emp-hero::before {
-        content: ''; position: absolute;
-        top: -60px; right: -40px; width: 240px; height: 240px; border-radius: 50%;
-        background: radial-gradient(circle, rgba(6,182,212,0.12) 0%, transparent 70%);
-        pointer-events: none;
-    }
-    .emp-hero::after {
-        content: ''; position: absolute;
-        bottom: -40px; left: 20%; width: 180px; height: 180px; border-radius: 50%;
-        background: radial-gradient(circle, rgba(6,182,212,0.06) 0%, transparent 70%);
-        pointer-events: none;
+    .dark .emp-hero {
+        background: #212529;
+        border-color: #343A40;
     }
 
     .emp-stat-tile {
         background: var(--bg-card);
         border: 1px solid var(--border-soft);
-        border-radius: 16px; padding: 1.25rem 1.5rem;
+        border-radius: 4px; padding: 1.25rem 1.5rem;
         box-shadow: var(--shadow-card);
-        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: all 0.2s ease;
         position: relative; overflow: hidden;
     }
-    .emp-stat-tile::after {
-        content: ''; position: absolute;
-        top: 0; left: 0; right: 0; height: 2px;
-        background: linear-gradient(90deg, var(--tile-accent, var(--em)), transparent);
-        border-radius: 16px 16px 0 0;
-    }
     .emp-stat-tile:hover {
-        transform: translateY(-3px);
-        box-shadow: var(--shadow-card), 0 12px 24px rgba(0,0,0,0.12);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-elevated);
         border-color: var(--tile-accent, var(--em-border));
     }
 
@@ -123,25 +109,26 @@
 
 {{-- ━━━━━━━━━━━━━━━━━━━━━━ HERO SECTION ━━━━━━━━━━━━━━━━━━━━━━ --}}
 <div class="emp-hero">
+    <div class="hero-line"></div>
     <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
         {{-- Left: Greeting --}}
         <div>
-            <p style="font-size: 0.62rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(6,182,212,0.7); margin-bottom: 0.35rem;">
+            <p style="font-size:0.62rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#ADB5BD;margin-bottom:0.35rem;">
                 {{ now()->translatedFormat('l, d F Y') }}
             </p>
-            <h1 style="font-size: 1.5rem; font-weight: 800; color: #F1F5F9; letter-spacing: -0.02em; line-height: 1.2;">
-                {{ $greeting }}, <span style="color: #38BDF8;">{{ explode(' ', $user->name)[0] }}</span> 👋
+            <h1 class="hero-greeting">
+                {{ $greeting }}, <span>{{ explode(' ', $user->name)[0] }}</span>
             </h1>
-            <p style="font-size: 0.8rem; color: #64748B; margin-top: 0.35rem;">
+            <p class="hero-sub">
                 {{ $user->position?->name ?? 'Karyawan' }} · {{ $user->division?->name ?? 'VALRYZE' }}
             </p>
 
             {{-- Status Chips --}}
             <div class="flex flex-wrap items-center gap-2 mt-3">
                 @if($todayAttendance)
-                    <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
-                          style="background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #34D399; font-size: 0.72rem; font-weight: 700;">
-                        <span style="width: 6px; height: 6px; border-radius: 50%; background: #10B981; box-shadow: 0 0 6px #10B981; animation: pulse 2s infinite;"></span>
+                    <span class="flex items-center gap-1.5 px-2.5 py-1 rounded"
+                          style="background:rgba(40,167,69,0.1);border:1px solid rgba(40,167,69,0.25);color:#28A745;font-size:0.72rem;font-weight:700;">
+                        <span style="width:6px;height:6px;border-radius:50%;background:#28A745;display:inline-block;"></span>
                         Hadir · {{ $todayAttendance->check_in_time ? \Carbon\Carbon::parse($todayAttendance->check_in_time)->format('H:i') : '-' }} WIB
                     </span>
                     @if($todayAttendance->status === 'late')
@@ -151,15 +138,15 @@
                         <span class="badge badge-success">✓ Sudah Pulang</span>
                     @endif
                 @else
-                    <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
-                          style="background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); color: #FCA5A5; font-size: 0.72rem; font-weight: 700;">
-                        <span style="width: 6px; height: 6px; border-radius: 50%; background: #EF4444;"></span>
+                    <span class="flex items-center gap-1.5 px-2.5 py-1 rounded"
+                          style="background:rgba(220,53,69,0.08);border:1px solid rgba(220,53,69,0.2);color:#DC3545;font-size:0.72rem;font-weight:700;">
+                        <span style="width:6px;height:6px;border-radius:50%;background:#DC3545;display:inline-block;"></span>
                         Belum Absen
                     </span>
                 @endif
                 @if($user->shift)
                     <span class="time-pill">
-                        <svg style="width:12px;height:12px;color:#94A3B8;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <svg style="width:12px;height:12px;color:#6C757D;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         Shift {{ \Carbon\Carbon::parse($user->shift->start_time)->format('H:i') }}–{{ \Carbon\Carbon::parse($user->shift->end_time)->format('H:i') }}
                     </span>
                 @endif
@@ -171,7 +158,7 @@
             @if(!$todayAttendance)
                 <a href="{{ route('attendance.check-in') }}"
                    class="btn btn-primary"
-                   style="padding: 0.75rem 1.75rem; font-size: 0.88rem; border-radius: 14px; box-shadow: 0 8px 24px rgba(6,182,212,0.3);">
+                   style="padding:0.75rem 1.75rem;font-size:0.88rem;">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14"/>
                     </svg>
@@ -180,19 +167,19 @@
             @elseif(!$todayAttendance->check_out_time)
                 <a href="{{ route('attendance.check-out') }}"
                    class="btn"
-                   style="padding: 0.75rem 1.75rem; font-size: 0.88rem; border-radius: 14px; background: linear-gradient(135deg,#F59E0B,#D97706); color:#fff; box-shadow: 0 8px 24px rgba(245,158,11,0.25);">
+                   style="padding:0.75rem 1.75rem;font-size:0.88rem;background:#FFC107;color:#212529;font-weight:700;border-radius:4px;display:inline-flex;align-items:center;gap:0.5rem;text-decoration:none;">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7"/>
                     </svg>
                     Absen Pulang
                 </a>
             @else
-                <div class="flex items-center gap-2 px-4 py-3 rounded-2xl"
-                     style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2);">
-                    <svg class="w-5 h-5" style="color:#34D399;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="flex items-center gap-2 px-4 py-3 rounded"
+                     style="background:rgba(40,167,69,0.08);border:1px solid rgba(40,167,69,0.2);">
+                    <svg class="w-5 h-5" style="color:#28A745;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
-                    <span style="font-size: 0.85rem; font-weight: 700; color: #34D399;">Hari ini selesai ✓</span>
+                    <span style="font-size:0.85rem;font-weight:700;color:#28A745;">Hari ini selesai ✓</span>
                 </div>
             @endif
         </div>

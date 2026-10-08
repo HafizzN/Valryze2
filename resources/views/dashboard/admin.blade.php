@@ -14,92 +14,83 @@
 
 <div class="space-y-5">
 
-    {{-- VALRYZE Hero Section --}}
-    <div class="hero-section">
+    {{-- B2B Hero Section --}}
+    <div class="hero-section" style="padding:1.75rem 2rem;">
         <div class="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <!-- Left — greeting + pills -->
+            <!-- Left — greeting -->
             <div class="flex-1">
-                <p class="uppercase mb-1" style="font-family: 'Plus Jakarta Sans',sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.13em; color: var(--hero-label);">
-                    Hero Dashboard
-                </p>
-                <h1 class="text-white mb-3" style="font-family: 'Plus Jakarta Sans',sans-serif; font-size: 22px; font-weight: 700;">
-                    {{ $greeting }}, {{ explode(' ', auth()->user()->name)[0] }} ✨
+                <div class="hero-line"></div>
+                <h1 class="hero-greeting">
+                    {{ $greeting }}, <span>{{ explode(' ', auth()->user()->name)[0] }}</span>
                 </h1>
-                <div class="flex flex-wrap items-center gap-2">
-                    <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full animate-pulse"
-                          style="background: rgba(6,182,212,0.2); border: 1px solid rgba(6,182,212,0.32); color: #BAE6FD; font-family: 'Plus Jakarta Sans',sans-serif; font-size: 12px; font-weight: 600;">
-                        <span style="width:6px; height:6px; background:#06B6D4; border-radius:50%;"></span>
+                <p class="hero-sub">{{ now()->format('l, d F Y') }} — Anda login sebagai <strong>{{ auth()->user()->roles->pluck('name')->first() }}</strong></p>
+                <div class="flex flex-wrap items-center gap-2 mt-4">
+                    <span class="flex items-center gap-1.5 px-2.5 py-1 rounded"
+                          style="background:rgba(0,123,255,0.08);border:1px solid rgba(0,123,255,0.2);color:#007BFF;font-size:12px;font-weight:600;">
+                        <span style="width:6px;height:6px;background:#007BFF;border-radius:50%;display:inline-block;"></span>
                         {{ $totalEmployees > 0 ? round(($presentToday/$totalEmployees)*100) : 0 }}% hadir
                     </span>
-                    <span style="color: var(--hero-label); font-size: 11px;">·</span>
-                    <span style="font-family: 'Plus Jakarta Sans',sans-serif; font-size: 12px; color: var(--hero-sub);">{{ $presentToday }} Present</span>
-                    <span style="color: var(--hero-label); font-size: 11px;">·</span>
-                    <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
-                          style="background: rgba(245,158,11,0.16); border: 1px solid rgba(245,158,11,0.28); color: #FCD34D; font-family: 'Plus Jakarta Sans',sans-serif; font-size: 12px; font-weight: 600;">
+                    <span style="color:#ADB5BD;font-size:11px;">·</span>
+                    <span style="font-size:12px;color:#6C757D;">{{ $presentToday }} Present</span>
+                    <span style="color:#ADB5BD;font-size:11px;">·</span>
+                    <span class="flex items-center gap-1.5 px-2.5 py-1 rounded"
+                          style="background:rgba(255,193,7,0.1);border:1px solid rgba(255,193,7,0.3);color:#856404;font-size:12px;font-weight:600;">
                         ⚠ {{ $pendingApprovals }} Pending
                     </span>
                     @if(auth()->user()->shift)
-                        <span style="color: var(--hero-label); font-size: 11px;">·</span>
-                        <span style="font-family: 'Plus Jakarta Sans',sans-serif; font-size: 12px; color: var(--hero-sub);">
+                        <span style="color:#ADB5BD;font-size:11px;">·</span>
+                        <span style="font-size:12px;color:#6C757D;">
                             Shift {{ \Carbon\Carbon::parse(auth()->user()->shift->start_time)->format('H:i') }}–{{ \Carbon\Carbon::parse(auth()->user()->shift->end_time)->format('H:i') }}
                         </span>
                     @endif
                     @if(auth()->user()->division)
-                        <span style="color: var(--hero-label); font-size: 11px;">·</span>
-                        <span style="font-family: 'Plus Jakarta Sans',sans-serif; font-size: 12px; color: var(--hero-sub);">
-                            {{ auth()->user()->division->name }}
-                        </span>
+                        <span style="color:#ADB5BD;font-size:11px;">·</span>
+                        <span style="font-size:12px;color:#6C757D;">{{ auth()->user()->division->name }}</span>
                     @endif
                 </div>
             </div>
 
-            <!-- Right — Today's Summary card -->
-            <div class="shrink-0 rounded-2xl px-5 py-4 flex items-center gap-5"
-                 style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.37);">
+            <!-- Right — Today's Summary card (clean B2B) -->
+            <div class="shrink-0 rounded px-5 py-4 flex items-center gap-5"
+                 style="background:#F8F8F8;border:1px solid #DEE2E6;min-width:220px;">
+                @php
+                    $pct = $totalEmployees > 0 ? round(($presentToday/$totalEmployees)*100) : 0;
+                    $r = 33;
+                    $circ = 2 * pi() * $r;
+                    $dash = ($pct / 100) * $circ;
+                @endphp
                 <!-- Ring chart -->
-                <div class="relative flex items-center justify-center" style="width: 76px; height: 76px;">
-                    @php
-                        $pct = $totalEmployees > 0 ? round(($presentToday/$totalEmployees)*100) : 0;
-                        $r = 33;
-                        $circ = 2 * pi() * $r;
-                        $dash = ($pct / 100) * $circ;
-                    @endphp
-                    <svg width="76" height="76" viewBox="0 0 76 76" style="transform: rotate(-90deg);" class="overflow-visible">
-                        <circle cx="38" cy="38" r="{{ $r }}" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6" />
+                <div class="relative flex items-center justify-center" style="width:76px;height:76px;">
+                    <svg width="76" height="76" viewBox="0 0 76 76" style="transform:rotate(-90deg);" class="overflow-visible">
+                        <circle cx="38" cy="38" r="{{ $r }}" fill="none" stroke="#DEE2E6" stroke-width="6" />
                         <circle cx="38" cy="38" r="{{ $r }}" fill="none"
-                                stroke="url(#rg)" stroke-width="6"
+                                stroke="#007BFF" stroke-width="6"
                                 stroke-dasharray="{{ $dash }} {{ $circ }}" stroke-linecap="round" />
-                        <defs>
-                            <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="#06B6D4" />
-                                <stop offset="100%" stop-color="#38BDF8" />
-                            </linearGradient>
-                        </defs>
                     </svg>
-                    <div class="absolute text-center" style="transform: translate(0, 0);">
-                        <div class="text-white" style="font-family: 'Plus Jakarta Sans',sans-serif; font-size: 13px; font-weight: 800; line-height: 1;">{{ $pct }}%</div>
-                        <div style="font-family: 'Plus Jakarta Sans',sans-serif; font-size: 8px; color: #E2E8F0; line-height: 1.2;">hadir</div>
+                    <div class="absolute text-center">
+                        <div style="font-size:13px;font-weight:800;color:#212529;line-height:1;">{{ $pct }}%</div>
+                        <div style="font-size:8px;color:#6C757D;line-height:1.2;">hadir</div>
                     </div>
                 </div>
                 <!-- Stats breakdown -->
                 <div class="space-y-1">
-                    <p class="uppercase" style="font-family: 'Plus Jakarta Sans',sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 0.12em; color: #BAE6FD; margin-bottom: 0.25rem;">
+                    <p class="uppercase" style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:#ADB5BD;margin-bottom:0.25rem;">
                         Ringkasan Hari Ini
                     </p>
                     <div class="flex items-center gap-3">
-                        <div class="w-1.5 h-3 rounded-full bg-[#34D399]"></div>
-                        <span style="font-family: 'JetBrains Mono',monospace; font-size: 12px; font-weight: 700; color: #FFFFFF;">{{ $presentToday }}</span>
-                        <span style="font-family: 'Plus Jakarta Sans',sans-serif; font-size: 10px; color: #E2E8F0;">Hadir</span>
+                        <div style="width:6px;height:12px;border-radius:99px;background:#28A745;"></div>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#212529;">{{ $presentToday }}</span>
+                        <span style="font-size:10px;color:#6C757D;">Hadir</span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <div class="w-1.5 h-3 rounded-full bg-[#FCD34D]"></div>
-                        <span style="font-family: 'JetBrains Mono',monospace; font-size: 12px; font-weight: 700; color: #FFFFFF;">{{ $pendingApprovals }}</span>
-                        <span style="font-family: 'Plus Jakarta Sans',sans-serif; font-size: 10px; color: #E2E8F0;">Pending</span>
+                        <div style="width:6px;height:12px;border-radius:99px;background:#FFC107;"></div>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#212529;">{{ $pendingApprovals }}</span>
+                        <span style="font-size:10px;color:#6C757D;">Pending</span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <div class="w-1.5 h-3 rounded-full bg-[#F87171]"></div>
-                        <span style="font-family: 'JetBrains Mono',monospace; font-size: 12px; font-weight: 700; color: #FFFFFF;">{{ max(0, $absentToday) }}</span>
-                        <span style="font-family: 'Plus Jakarta Sans',sans-serif; font-size: 10px; color: #E2E8F0;">Absen</span>
+                        <div style="width:6px;height:12px;border-radius:99px;background:#DC3545;"></div>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#212529;">{{ max(0, $absentToday) }}</span>
+                        <span style="font-size:10px;color:#6C757D;">Absen</span>
                     </div>
                 </div>
             </div>
@@ -428,31 +419,31 @@
         <div class="lg:col-span-2 space-y-5">
             
             <!-- AI Insight Sidebar -->
-            <div class="card flex flex-col" style="border: 1px solid var(--border-soft);">
+            <div class="card flex flex-col" style="border:1px solid var(--border-soft);">
                 <!-- Header -->
-                <div class="px-5 py-4 rounded-t-2xl"
-                     style="background: #071830; border-bottom: 1px solid rgba(6,182,212,0.15);">
+                <div class="px-5 py-4 rounded-t"
+                     style="background:#F8F8F8;border-bottom:1px solid var(--border-soft);">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 rounded-xl flex items-center justify-center"
-                                 style="background: rgba(6,182,212,0.18); border: 1px solid rgba(6,182,212,0.3);">
-                                <svg class="w-4 h-4 text-[#06B6D4]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <div class="w-8 h-8 rounded flex items-center justify-center"
+                                 style="background:rgba(0,123,255,0.1);border:1px solid rgba(0,123,255,0.2);">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="#007BFF">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                                 </svg>
                             </div>
                             <div>
-                                <h2 class="text-white" style="font-family: 'Plus Jakarta Sans',sans-serif; font-size: 14px; font-weight: 700;">
+                                <h2 style="font-size:14px;font-weight:700;color:var(--t1);">
                                     AI Insight
                                 </h2>
-                                <p style="font-family: 'Plus Jakarta Sans',sans-serif; font-size: 11px; color: #7DD3FC; margin-top: 1px;">
+                                <p style="font-size:11px;color:var(--t3);margin-top:1px;">
                                     Analisis cerdas hari ini
                                 </p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
-                             style="background: rgba(6,182,212,0.15); border: 1px solid rgba(6,182,212,0.25);">
-                            <div class="w-1.5 h-1.5 rounded-full bg-[#06B6D4] animate-pulse"></div>
-                            <span style="font-family: 'Plus Jakarta Sans',sans-serif; font-size: 10px; font-weight: 600; color: #06B6D4;">Live</span>
+                        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded"
+                             style="background:rgba(40,167,69,0.1);border:1px solid rgba(40,167,69,0.2);">
+                            <div style="width:6px;height:6px;border-radius:50%;background:#28A745;" class="animate-pulse"></div>
+                            <span style="font-size:10px;font-weight:600;color:#28A745;">Live</span>
                         </div>
                     </div>
                 </div>
@@ -498,37 +489,31 @@
                 <div class="p-3 space-y-2.5 overflow-y-auto">
                     @foreach($insights as $item)
                         @php
-                            $bgMap = ['warning' => 'rgba(245,158,11,0.08)', 'info' => 'rgba(6,182,212,0.08)', 'success' => 'rgba(16,185,129,0.08)'];
-                            $borderMap = ['warning' => '#F59E0B', 'info' => '#06B6D4', 'success' => '#10B981'];
+                            $bgMap = ['warning' => 'rgba(255,193,7,0.06)', 'info' => 'rgba(0,123,255,0.06)', 'success' => 'rgba(40,167,69,0.06)'];
+                            $borderMap = ['warning' => '#FFC107', 'info' => '#007BFF', 'success' => '#28A745'];
                             $labelMap = ['warning' => 'Peringatan', 'info' => 'Info', 'success' => 'Bagus'];
                         @endphp
-                        <div class="rounded-xl p-3.5" style="background: {{ $bgMap[$item['type']] }}; border-left: 2px solid {{ $borderMap[$item['type']] }};">
+                        <div class="rounded p-3.5" style="background: {{ $bgMap[$item['type']] }}; border-left: 2px solid {{ $borderMap[$item['type']] }}; border: 1px solid {{ $borderMap[$item['type']] }}30; border-left: 2px solid {{ $borderMap[$item['type']] }};">
                             <div class="flex items-center justify-between mb-1.5">
                                 <div class="flex items-center gap-2">
-                                    <div class="w-6 h-6 rounded-lg bg-slate-800 flex items-center justify-center shrink-0" style="border: 1px solid {{ $borderMap[$item['type']] }}50;">
-                                        <span class="text-white" style="font-size: 8px; font-weight: bold;">AI</span>
+                                    <div class="w-6 h-6 rounded flex items-center justify-center shrink-0" style="background:var(--bg-elevated);border:1px solid var(--border-soft);">
+                                        <span style="font-size:8px;font-weight:bold;color:var(--t1);">AI</span>
                                     </div>
                                     <div>
-                                        <div style="font-size: 11px; font-weight: 700; color: var(--t1);">{{ $item['name'] }}</div>
-                                        <div style="font-size: 9px; color: var(--t3);">{{ $item['role'] }}</div>
+                                        <div style="font-size:11px;font-weight:700;color:var(--t1);">{{ $item['name'] }}</div>
+                                        <div style="font-size:9px;color:var(--t3);">{{ $item['role'] }}</div>
                                     </div>
                                 </div>
-                                <span class="px-2 py-0.5 rounded-full" style="font-size: 9px; font-weight: 700; color: {{ $borderMap[$item['type']] }}; background: rgba(255,255,255,0.05);">
+                                <span class="px-2 py-0.5 rounded" style="font-size:9px;font-weight:700;color:{{ $borderMap[$item['type']] }};background:{{ $bgMap[$item['type']] }};">
                                     {{ $labelMap[$item['type']] }}
                                 </span>
                             </div>
-                            <p style="font-size: 10.5px; color: var(--t3); line-height: 1.5;">
-                                {{ $item['insight'] }}
-                            </p>
-                            <div class="flex items-center justify-between mt-2 pt-2" style="border-top: 1px solid var(--border-soft); opacity:0.8;">
-                                <div class="flex items-center gap-1">
-                                    <span style="font-size: 9px; font-weight: 700; color: {{ $borderMap[$item['type']] }};">
-                                        ⚡ AI Confidence: {{ $item['confidence'] }}%
-                                    </span>
-                                </div>
-                                <span style="font-size: 9px; color: var(--t4);">
-                                    Updated {{ $item['ago'] }}
+                            <p style="font-size:10.5px;color:var(--t3);line-height:1.5;">{{ $item['insight'] }}</p>
+                            <div class="flex items-center justify-between mt-2 pt-2" style="border-top:1px solid var(--border-soft);">
+                                <span style="font-size:9px;font-weight:700;color:{{ $borderMap[$item['type']] }};">
+                                    ⚡ AI Confidence: {{ $item['confidence'] }}%
                                 </span>
+                                <span style="font-size:9px;color:var(--t4);">Updated {{ $item['ago'] }}</span>
                             </div>
                         </div>
                     @endforeach
@@ -597,14 +582,14 @@ const weeklyData = @json($chartData);
 const isDarkTheme = document.documentElement.classList.contains('dark');
 const chartCtx = document.getElementById('attendanceChart').getContext('2d');
 
-// Create gradients for smooth Area Chart fill
+// Create gradients for smooth Area Chart fill — B2B colors
 const presentGradient = chartCtx.createLinearGradient(0, 0, 0, 180);
-presentGradient.addColorStop(0, 'rgba(6, 182, 212, 0.32)');
-presentGradient.addColorStop(1, 'rgba(6, 182, 212, 0.0)');
+presentGradient.addColorStop(0, 'rgba(0, 123, 255, 0.18)');
+presentGradient.addColorStop(1, 'rgba(0, 123, 255, 0.0)');
 
 const lateGradient = chartCtx.createLinearGradient(0, 0, 0, 180);
-lateGradient.addColorStop(0, 'rgba(245, 158, 11, 0.24)');
-lateGradient.addColorStop(1, 'rgba(245, 158, 11, 0.0)');
+lateGradient.addColorStop(0, 'rgba(255, 193, 7, 0.18)');
+lateGradient.addColorStop(1, 'rgba(255, 193, 7, 0.0)');
 
 new Chart(chartCtx, {
     type: 'line',
@@ -617,29 +602,29 @@ new Chart(chartCtx, {
             {
                 label: 'Hadir',
                 data: weeklyData.map(d => d.present),
-                borderColor: '#06B6D4',
+                borderColor: '#007BFF',
                 backgroundColor: presentGradient,
                 fill: true,
                 tension: 0.4,
-                borderWidth: 3,
-                pointBackgroundColor: '#06B6D4',
-                pointBorderColor: '#071830',
+                borderWidth: 2,
+                pointBackgroundColor: '#007BFF',
+                pointBorderColor: '#FFFFFF',
                 pointBorderWidth: 2,
-                pointHoverRadius: 7,
+                pointHoverRadius: 6,
                 pointRadius: 4
             },
             {
                 label: 'Terlambat',
                 data: weeklyData.map(d => d.late),
-                borderColor: '#F59E0B',
+                borderColor: '#FFC107',
                 backgroundColor: lateGradient,
                 fill: true,
                 tension: 0.4,
                 borderWidth: 2,
-                pointBackgroundColor: '#F59E0B',
-                pointBorderColor: '#071830',
+                pointBackgroundColor: '#FFC107',
+                pointBorderColor: '#FFFFFF',
                 pointBorderWidth: 1.5,
-                pointHoverRadius: 6,
+                pointHoverRadius: 5,
                 pointRadius: 3
             }
         ]
@@ -650,26 +635,28 @@ new Chart(chartCtx, {
         plugins: {
             legend: {
                 labels: {
-                    color: isDarkTheme ? '#E2E8F0' : '#334155',
-                    font: { size: 10, family: 'Plus Jakarta Sans', weight: '600' }
+                    color: isDarkTheme ? '#ADB5BD' : '#212529',
+                    font: { size: 11, family: 'Inter', weight: '500' }
                 }
             },
             tooltip: {
-                backgroundColor: '#071830',
-                titleColor: '#FFFFFF',
-                bodyColor: '#CBD5E1',
-                cornerRadius: 8,
-                padding: 8
+                backgroundColor: isDarkTheme ? '#212529' : '#FFFFFF',
+                titleColor: isDarkTheme ? '#F8F9FA' : '#212529',
+                bodyColor: isDarkTheme ? '#ADB5BD' : '#6C757D',
+                borderColor: isDarkTheme ? '#343A40' : '#DEE2E6',
+                borderWidth: 1,
+                cornerRadius: 4,
+                padding: 10
             }
         },
         scales: {
             x: {
                 grid: { display: false },
-                ticks: { color: isDarkTheme ? '#94A3B8' : '#64748B', font: { size: 10 } }
+                ticks: { color: isDarkTheme ? '#6C757D' : '#6C757D', font: { size: 11, family: 'Inter' } }
             },
             y: {
-                grid: { color: isDarkTheme ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)' },
-                ticks: { color: isDarkTheme ? '#94A3B8' : '#64748B', font: { size: 10 } },
+                grid: { color: isDarkTheme ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' },
+                ticks: { color: isDarkTheme ? '#6C757D' : '#6C757D', font: { size: 11, family: 'Inter' } },
                 beginAtZero: true
             }
         }

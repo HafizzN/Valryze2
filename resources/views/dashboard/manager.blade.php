@@ -8,23 +8,15 @@
 <style>
     .mgr-hero {
         position: relative; overflow: hidden;
-        background: linear-gradient(135deg, #071830 0%, #0F2845 55%, #0A2040 100%);
-        border: 1px solid rgba(6,182,212,0.18);
-        border-radius: 20px; padding: 1.75rem 2rem;
+        background: #FFFFFF;
+        border: 1px solid #DEE2E6;
+        border-radius: 4px; padding: 1.75rem 2rem;
         margin-bottom: 1.5rem;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
-    .mgr-hero::before {
-        content:''; position:absolute; top:-60px; right:-40px;
-        width:260px; height:260px; border-radius:50%;
-        background: radial-gradient(circle, rgba(6,182,212,0.1) 0%, transparent 70%);
-        pointer-events:none;
-    }
-    .mgr-hero::after {
-        content:''; position:absolute; bottom:-50px; left:15%;
-        width:200px; height:200px; border-radius:50%;
-        background: radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%);
-        pointer-events:none;
+    .dark .mgr-hero {
+        background: #212529;
+        border-color: #343A40;
     }
 
     .kpi-card {
@@ -135,43 +127,44 @@
 
 {{-- ━━━━━━━━━━━━━━━━━━━━━━ HERO ━━━━━━━━━━━━━━━━━━━━━━ --}}
 <div class="mgr-hero">
+    <div class="hero-line"></div>
     <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
         <div>
-            <p style="font-size:0.62rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(6,182,212,0.7);margin-bottom:0.35rem;">
+            <p style="font-size:0.62rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#ADB5BD;margin-bottom:0.35rem;">
                 {{ now()->translatedFormat('l, d F Y') }}
             </p>
-            <h1 style="font-size:1.5rem;font-weight:800;color:#F1F5F9;letter-spacing:-0.02em;line-height:1.2;">
-                {{ $greeting }}, <span style="color:#38BDF8;">{{ explode(' ', $user->name)[0] }}</span> 👋
+            <h1 class="hero-greeting">
+                {{ $greeting }}, <span>{{ explode(' ', $user->name)[0] }}</span>
             </h1>
-            <p style="font-size:0.8rem;color:#64748B;margin-top:0.3rem;">
+            <p class="hero-sub">
                 Manager · {{ $user->division?->name ?? 'VALRYZE' }}
             </p>
             <div class="flex flex-wrap items-center gap-2 mt-3">
                 @if($totalPending > 0)
-                <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
-                      style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25);color:#FCA5A5;font-size:0.72rem;font-weight:700;">
-                    <span style="width:6px;height:6px;border-radius:50%;background:#EF4444;box-shadow:0 0 6px #EF4444;animation:pulse 2s infinite;"></span>
+                <span class="flex items-center gap-1.5 px-2.5 py-1 rounded"
+                      style="background:rgba(220,53,69,0.08);border:1px solid rgba(220,53,69,0.2);color:#DC3545;font-size:0.72rem;font-weight:700;">
+                    <span style="width:6px;height:6px;border-radius:50%;background:#DC3545;display:inline-block;"></span>
                     {{ $totalPending }} Pengajuan Menunggu
                 </span>
                 @else
-                <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
-                      style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);color:#34D399;font-size:0.72rem;font-weight:700;">
-                    <span style="width:6px;height:6px;border-radius:50%;background:#10B981;box-shadow:0 0 6px #10B981;animation:pulse 2s infinite;"></span>
+                <span class="flex items-center gap-1.5 px-2.5 py-1 rounded"
+                      style="background:rgba(40,167,69,0.08);border:1px solid rgba(40,167,69,0.2);color:#28A745;font-size:0.72rem;font-weight:700;">
+                    <span style="width:6px;height:6px;border-radius:50%;background:#28A745;display:inline-block;"></span>
                     Semua Terproses
                 </span>
                 @endif
-                <span style="font-size:0.72rem;font-weight:600;color:#64748B;padding:0.35rem 0.85rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:99px;">
+                <span style="font-size:0.72rem;font-weight:600;color:#6C757D;padding:0.35rem 0.85rem;background:var(--bg-elevated);border:1px solid var(--border-soft);border-radius:99px;">
                     {{ $presentToday }} anggota hadir hari ini
                 </span>
             </div>
         </div>
         {{-- Ring indicator total pending --}}
         @if($totalPending > 0)
-        <div class="shrink-0 flex items-center gap-3 px-5 py-4 rounded-2xl"
-             style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);">
+        <div class="shrink-0 flex items-center gap-3 px-5 py-4 rounded"
+             style="background:rgba(220,53,69,0.06);border:1px solid rgba(220,53,69,0.15);">
             <div style="text-align:center;">
-                <div style="font-size:2.5rem;font-weight:800;color:#FCA5A5;line-height:1;letter-spacing:-0.04em;">{{ $totalPending }}</div>
-                <div style="font-size:0.68rem;color:#94A3B8;margin-top:0.2rem;">Perlu ditindaklanjuti</div>
+                <div style="font-size:2.5rem;font-weight:800;color:#DC3545;line-height:1;letter-spacing:-0.04em;">{{ $totalPending }}</div>
+                <div style="font-size:0.68rem;color:#6C757D;margin-top:0.2rem;">Perlu ditindaklanjuti</div>
             </div>
         </div>
         @endif
